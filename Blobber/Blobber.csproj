@@ -51,6 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlobAction.cs" />
+    <Compile Include="BlobberStitcher.Embed.cs" />
     <Compile Include="BlobberStitcher.cs" />
     <Compile Include="BlobberTask.cs" />
     <Compile Include="BlobDirective.cs" />

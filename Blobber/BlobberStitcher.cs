@@ -15,16 +15,27 @@ namespace Blobber
     using StitcherBoy.Project;
     using StitcherBoy.Weaving;
 
-    public class BlobberStitcher : SingleStitcher
+    public partial class BlobberStitcher : SingleStitcher
     {
         protected override bool Process(StitcherContext context)
         {
+            bool processed = false;
             var directives = LoadDirectives(context);
             foreach (var reference in context.Project.References)
             {
                 var action = GetAction(reference, directives);
+                switch (action)
+                {
+                    case BlobAction.Embed:
+                        Embed(context.Module, reference);
+                        processed = true;
+                        break;
+                    case BlobAction.Merge:
+                        processed = true;
+                        break;
+                }
             }
-            return false;
+            return processed;
         }
 
         /// <summary>
@@ -98,7 +109,7 @@ namespace Blobber
             return directives;
         }
 
-        private BlobAction? Parse(string literal)
+        private static BlobAction? Parse(string literal)
         {
             BlobAction action;
             if (Enum.TryParse(literal, true, out action))
