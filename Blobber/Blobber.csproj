@@ -43,8 +43,8 @@
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="StitcherBoy, Version=0.2.4.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\StitcherBoy.0.2.4.0\lib\net45\StitcherBoy.dll</HintPath>
+    <Reference Include="StitcherBoy, Version=0.2.5.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\StitcherBoy.0.2.5.0\lib\net45\StitcherBoy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -79,7 +79,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Blobber.tt</DependentUpon>
     </None>
-    <None Include="Blobber.targets" />
+    <None Include="Blobber.targets">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\ProductInfo.tt">
@@ -106,7 +108,8 @@
   <PropertyGroup>
     <PostBuildEvent>rem --- ILMerge ------------------------------------------------------------------------------
 
-"$(ProjectDir)..\Libraries\ilmerge.exe" /keyfile:"$(ProjectDir)Properties\Blobber.snk" /out:"$(TargetPath)" "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" "$(TargetDir)StitcherBoy.dll" 
+"$(ProjectDir)..\Libraries\ilmerge.exe" /keyfile:"$(ProjectDir)Properties\Blobber.snk" /out:"$(TargetPath)" "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" "$(TargetDir)StitcherBoy.dll"  "$(TargetDir)WildcardMatch.dll" 
+
 
 rem --- NuGet pack ------------------------------------------------------------------------------
 

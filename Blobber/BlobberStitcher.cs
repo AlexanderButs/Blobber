@@ -7,7 +7,6 @@
 namespace Blobber
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -21,6 +20,7 @@ namespace Blobber
     {
         protected override bool Process(StitcherContext context)
         {
+            Logging.Write("Assembly at {0}",context.AssemblyPath);
             bool processed = false;
             var directives = LoadDirectives(context);
             foreach (var reference in context.Project.References)

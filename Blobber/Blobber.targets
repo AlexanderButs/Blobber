@@ -5,11 +5,8 @@
     <BlobberPath Condition="$(BlobberPath) == '' Or $(BlobberPath) == '*Undefined*'">$(MSBuildThisFileDirectory)..\Blobber.exe</BlobberPath>
   </PropertyGroup>
 
-  <UsingTask
-      TaskName="BlobberTask"
-      AssemblyFile="$(BlobberPath)" />
-  <Target Name="BlobberTarget" AfterTargets="CoreCompile">
+  <UsingTask TaskName="BlobberTask" AssemblyFile="$(BlobberPath)" />
+  <Target Name="BlobberTarget" AfterTargets="AfterBuild">
     <BlobberTask ProjectPath="$(ProjectPath)" SolutionPath="$(SolutionPath)" AssemblyPath="@(IntermediateAssembly)" />
   </Target>
 </Project>
-

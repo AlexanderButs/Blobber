@@ -29,6 +29,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NuGet", ".NuGet", "{A6BEE3
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskTestApplication", "Test\TaskTestApplication\TaskTestApplication.csproj", "{CE7A47B6-9AC8-465D-8274-DF0488762BC5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{313D4F23-D79A-48BC-8580-67FB5E114DEB} = {313D4F23-D79A-48BC-8580-67FB5E114DEB}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +56,10 @@ Global
 		{83045FF0-09C4-44A7-BEAA-84CB21A6CBFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83045FF0-09C4-44A7-BEAA-84CB21A6CBFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83045FF0-09C4-44A7-BEAA-84CB21A6CBFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE7A47B6-9AC8-465D-8274-DF0488762BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE7A47B6-9AC8-465D-8274-DF0488762BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE7A47B6-9AC8-465D-8274-DF0488762BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7A47B6-9AC8-465D-8274-DF0488762BC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,5 +69,6 @@ Global
 		{0E8540A5-21E6-462F-AD56-2D6AD60BE673} = {0BD9E146-23EC-4887-B06A-FECF831F9A5C}
 		{83045FF0-09C4-44A7-BEAA-84CB21A6CBFD} = {0BD9E146-23EC-4887-B06A-FECF831F9A5C}
 		{A6BEE310-57C9-4BC3-8781-7F4517716744} = {A5B86DDA-049F-412D-BC15-3924DEFEC60C}
+		{CE7A47B6-9AC8-465D-8274-DF0488762BC5} = {0BD9E146-23EC-4887-B06A-FECF831F9A5C}
 	EndGlobalSection
 EndGlobal
