@@ -6,10 +6,13 @@
 
 namespace EmbeddedLibrary
 {
+    using System;
+
     public class EmbeddedClass
     {
         public void F()
         {
+            Console.WriteLine("Hello from EmbeddedClass");
         }
     }
 }

@@ -37,8 +37,8 @@
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.Build.Utilities.v4.0" />
-    <Reference Include="StitcherBoy, Version=0.2.3.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
-      <HintPath>..\packages\StitcherBoy.0.2.3.0\lib\net45\StitcherBoy.dll</HintPath>
+    <Reference Include="StitcherBoy, Version=0.2.4.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\StitcherBoy.0.2.4.0\lib\net45\StitcherBoy.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -50,6 +50,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BlobberStitcher.Merge.cs" />
+    <Compile Include="Loader.cs" />
     <Compile Include="BlobAction.cs" />
     <Compile Include="BlobberStitcher.Embed.cs" />
     <Compile Include="BlobberStitcher.cs" />
@@ -84,6 +86,26 @@
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\Clarius.TransformOnBuild.1.1.12\build\Clarius.TransformOnBuild.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Clarius.TransformOnBuild.1.1.12\build\Clarius.TransformOnBuild.targets'))" />
   </Target>
+  <PropertyGroup>
+    <PostBuildEvent>rem --- ILMerge ------------------------------------------------------------------------------
+
+rem "$(ProjectDir)..\Libraries\ilmerge.exe" /keyfile:"$(ProjectDir)Properties\Blobber.snk" /out:"$(TargetPath)" "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" "$(TargetDir)StitcherBoy.dll" 
+
+rem --- NuGet pack ------------------------------------------------------------------------------
+
+if not "$(ConfigurationName)"=="Release" goto :noRelease
+
+echo Packaging for NuGet...
+
+set nuget=nuget.exe
+rem set nuget="$(SolutionDir)\.nuget\NuGet.exe"
+
+rem copy "$(TargetPath)" "$(TargetDir)$(TargetName).dll"
+rem %25nuget%25 pack "$(ProjectDir)\Blobber.nuspec" -Verbosity detailed -NonInteractive -IncludeReferencedProjects -NonInteractive -Tool -Properties ConfigurationName=$(ConfigurationName) 
+
+:noRelease
+</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

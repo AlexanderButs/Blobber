@@ -11,6 +11,8 @@ namespace Blobber
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using dnlib.DotNet;
+    using dnlib.DotNet.Emit;
     using Microsoft.Build.Evaluation;
     using StitcherBoy.Project;
     using StitcherBoy.Weaving;
@@ -31,12 +33,34 @@ namespace Blobber
                         processed = true;
                         break;
                     case BlobAction.Merge:
+                        Merge(context.Module, reference);
                         processed = true;
                         break;
                 }
             }
+
+            if (processed)
+                EmbedLoader(context.Module, context.TaskAssemblyPath);
             return processed;
         }
+
+        private void EmbedLoader(ModuleDefMD2 moduleDef, string taskAssemblyPath)
+        {
+            var assemblyLoaderTypeName = typeof(Loader).FullName;
+            // import Loader type from this assembly
+            var thisModuleDef = ModuleDefMD.Load(taskAssemblyPath);
+            var loaderType = thisModuleDef.Find(assemblyLoaderTypeName, true);
+            thisModuleDef.Types.Remove(loaderType);
+            loaderType.Name = "⌂";
+            loaderType.Namespace = null;
+            moduleDef.Types.Add(loaderType);
+            // ensure it is called from module cctor
+            var moduleType = moduleDef.Find("<Module>", true);
+            var cctor = moduleType.FindOrCreateStaticConstructor();
+            var loaderInitializeMethod = loaderType.FindMethod(nameof(Loader.Initialize));
+            cctor.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, moduleDef.Import(loaderInitializeMethod)));
+        }
+
 
         /// <summary>
         /// Gets the action.

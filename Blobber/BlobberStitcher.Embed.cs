@@ -9,26 +9,28 @@ namespace Blobber
     using System.IO;
     using System.IO.Compression;
     using dnlib.DotNet;
-    using Microsoft.Build.Construction;
     using StitcherBoy.Project;
 
     partial class BlobberStitcher
     {
-        private void Embed(ModuleDefMD2 moduleDef, AssemblyReference assemblyReference)
+        private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference)
         {
             var gzippedAssembly = GetGZippedAssembly(assemblyReference);
-            moduleDef.Resources.Add(new EmbeddedResource($"blobbed:{assemblyReference.AssemblyName}", gzippedAssembly));
+            targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), gzippedAssembly));
         }
 
+        /// <summary>
+        /// Gets the Gzipped assembly.
+        /// </summary>
+        /// <param name="assemblyReference">The assembly reference.</param>
+        /// <returns></returns>
         private static byte[] GetGZippedAssembly(AssemblyReference assemblyReference)
         {
             using (var zippedStream = new MemoryStream())
             {
                 using (var gzipStream = new GZipStream(zippedStream, CompressionLevel.Optimal))
                 using (var assemblyStream = File.OpenRead(assemblyReference.Path))
-                {
                     assemblyStream.CopyTo(gzipStream);
-                }
                 return zippedStream.ToArray();
             }
         }

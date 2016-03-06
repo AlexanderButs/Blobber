@@ -6,10 +6,13 @@
 
 namespace MergedLibrary
 {
+    using System;
+
     public class MergedClass
     {
         public void G()
         {
+            Console.WriteLine("Salut depuis MergedClass");
         }
     }
 }

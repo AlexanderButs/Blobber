@@ -6,6 +6,8 @@
 
 namespace TestApplication
 {
+    using System;
+    using System.Reflection;
     using EmbeddedLibrary;
     using MergedLibrary;
 
@@ -13,10 +15,27 @@ namespace TestApplication
     {
         static void Main(string[] args)
         {
+            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+            AppDomain.CurrentDomain.TypeResolve += OnTypeResolve;
+            AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
             var c = new EmbeddedClass();
             c.F();
             var d = new MergedClass();
             d.G();
+        }
+
+        private static void OnAssemblyLoad(object sender, AssemblyLoadEventArgs args)
+        {
+        }
+
+        private static Assembly OnTypeResolve(object sender, ResolveEventArgs args)
+        {
+            return null;
+        }
+
+        private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            return null;
         }
     }
 }

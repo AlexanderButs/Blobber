@@ -4,17 +4,10 @@
 // MIT License - http://opensource.org/licenses/MIT
 #endregion
 
+using System.Reflection;
 using Blobber;
 
 public class BlobberTask : StitcherTask<BlobberStitcher>
 {
-    public static int Main(string[] args)
-    {
-        try
-        {
-            return Run(new BlobberTask(), args);
-        }
-        catch { }
-        return -1;
-    }
+    public static int Main(string[] args) => Run(new BlobberTask(), args);
 }
