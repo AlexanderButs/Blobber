@@ -14,7 +14,7 @@ Also, assemblies referenced as not private ('copy local' not set) can be process
 
 In order to make fine tuning, simply add a file named `Blobber` at the projet root (it can be of any type, so the `none` is recommended).
 The syntax is:  
-`[<scope>]<name>:<action>`
+`[<scope>]<name>:<action>`  
 Where:  
   - `<scope>` can be `+`, `-` or left empty (in which case it is equivalent to `-`). `-` addresses private assemblies (the 'copy local') and `+` specifies public assemblies (I am honestly not sure this feature is useful)
   - `<name>` is the name of the assembly to match. Wildcard are supported, so `SQLlite` or `Microsoft.*` will work as expected
@@ -23,5 +23,7 @@ Where:
 Note: all lines are always processed, so you need to start from less specific to most specific.
 
 So if no `Blobber` file is found in project it will behave as if this line was specified:  
-`*: embed`
+`*: embed`  
 (even if a `Blobber` file is used, the line above is always used before any other line).
+
+There is a sample [here](https://github.com/picrap/Blobber/blob/master/Test/TestApplication/Blobber)
