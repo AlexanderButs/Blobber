@@ -67,6 +67,12 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Blobber.nuspec">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Blobber.tt</DependentUpon>
+    </None>
+    <None Include="Blobber.targets" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Properties\ProductInfo.tt">
@@ -74,6 +80,10 @@
       <LastGenOutput>ProductInfo.cs</LastGenOutput>
     </Content>
     <Content Include="Properties\ProductInfoValues.tt" />
+    <Content Include="Blobber.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Blobber.nuspec</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -7,7 +7,13 @@
 using System.Reflection;
 using Blobber;
 
+// ReSharper disable once CheckNamespace
 public class BlobberTask : StitcherTask<BlobberStitcher>
 {
+    /// <summary>
+    /// Entry point for nested process (for isolation).
+    /// </summary>
+    /// <param name="args">The arguments.</param>
+    /// <returns></returns>
     public static int Main(string[] args) => Run(new BlobberTask(), args);
 }

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BlobberPath Condition="$(BlobberPath) == '' Or $(BlobberPath) == '*Undefined*'">$(MSBuildThisFileDirectory)..\Blobber.exe</BlobberPath>
+  </PropertyGroup>
+
+  <UsingTask
+      TaskName="BlobberTask"
+      AssemblyFile="$(BlobberPath)" />
+  <Target Name="BlobberTarget" AfterTargets="CoreCompile">
+    <BlobberTask ProjectPath="$(ProjectPath)" SolutionPath="$(SolutionPath)" AssemblyPath="@(IntermediateAssembly)" />
+  </Target>
+</Project>
+
