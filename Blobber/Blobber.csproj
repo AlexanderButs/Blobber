@@ -33,6 +33,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>Properties\Blobber.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Build" />
     <Reference Include="Microsoft.Build.Framework" />
@@ -66,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Blobber.snk" />
     <None Include="packages.config" />
     <None Include="Blobber.nuspec">
       <AutoGen>True</AutoGen>
@@ -75,15 +82,15 @@
     <None Include="Blobber.targets" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Properties\ProductInfo.tt">
+    <None Include="Properties\ProductInfo.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ProductInfo.cs</LastGenOutput>
-    </Content>
-    <Content Include="Properties\ProductInfoValues.tt" />
-    <Content Include="Blobber.tt">
+    </None>
+    <None Include="Properties\ProductInfoValues.tt" />
+    <None Include="Blobber.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Blobber.nuspec</LastGenOutput>
-    </Content>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -99,7 +106,7 @@
   <PropertyGroup>
     <PostBuildEvent>rem --- ILMerge ------------------------------------------------------------------------------
 
-rem "$(ProjectDir)..\Libraries\ilmerge.exe" /keyfile:"$(ProjectDir)Properties\Blobber.snk" /out:"$(TargetPath)" "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" "$(TargetDir)StitcherBoy.dll" 
+"$(ProjectDir)..\Libraries\ilmerge.exe" /keyfile:"$(ProjectDir)Properties\Blobber.snk" /out:"$(TargetPath)" "$(ProjectDir)obj\$(ConfigurationName)\$(TargetFileName)" "$(TargetDir)StitcherBoy.dll" 
 
 rem --- NuGet pack ------------------------------------------------------------------------------
 
@@ -107,11 +114,12 @@ if not "$(ConfigurationName)"=="Release" goto :noRelease
 
 echo Packaging for NuGet...
 
-set nuget=nuget.exe
+rem set nuget=nuget.exe
 rem set nuget="$(SolutionDir)\.nuget\NuGet.exe"
+path=%25path%25;$(SolutionDir)\.nuget
 
 rem copy "$(TargetPath)" "$(TargetDir)$(TargetName).dll"
-rem %25nuget%25 pack "$(ProjectDir)\Blobber.nuspec" -Verbosity detailed -NonInteractive -IncludeReferencedProjects -NonInteractive -Tool -Properties ConfigurationName=$(ConfigurationName) 
+nuget pack "$(ProjectDir)\Blobber.nuspec" -Verbosity detailed -NonInteractive -IncludeReferencedProjects -NonInteractive -Tool -Properties ConfigurationName=$(ConfigurationName) 
 
 :noRelease
 </PostBuildEvent>
