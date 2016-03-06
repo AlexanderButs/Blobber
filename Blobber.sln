@@ -18,6 +18,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MergedLibrary", "Test\Merge
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{A5B86DDA-049F-412D-BC15-3924DEFEC60C}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		Libraries\ILMerge.exe = Libraries\ILMerge.exe
 	EndProjectSection
 EndProject
