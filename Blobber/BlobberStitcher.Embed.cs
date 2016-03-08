@@ -15,8 +15,10 @@ namespace Blobber
     {
         private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference)
         {
+            Logging.Write("Embedding {0}", assemblyReference.AssemblyName);
             var gzippedAssembly = GetGZippedAssembly(assemblyReference);
             targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), gzippedAssembly));
+            File.Delete(assemblyReference.Path);
         }
 
         /// <summary>

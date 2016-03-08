@@ -7,6 +7,7 @@
 namespace Blobber
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.IO.Compression;
     using System.Reflection;
@@ -36,6 +37,7 @@ namespace Blobber
             if (resourceStream == null)
                 return null;
 
+            Trace.WriteLine($"Blobber: loading embedded assembly {name}");
             using (var assemblyStream = new MemoryStream())
             {
                 using (var gzipStream = new GZipStream(resourceStream, CompressionMode.Decompress))
