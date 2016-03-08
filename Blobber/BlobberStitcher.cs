@@ -20,7 +20,7 @@ namespace Blobber
     {
         protected override bool Process(StitcherContext context)
         {
-            Logging.Write("Assembly at {0}",context.AssemblyPath);
+            Logging.Write("Assembly at {0}", context.AssemblyPath);
             bool processed = false;
             var directives = LoadDirectives(context);
             foreach (var reference in context.Project.References)
@@ -29,11 +29,11 @@ namespace Blobber
                 switch (action)
                 {
                     case BlobAction.Embed:
-                        Embed(context.Module, reference);
+                        Embed(context.Module, reference, GetReferencePath(reference, context.AssemblyPath));
                         processed = true;
                         break;
                     case BlobAction.Merge:
-                        Merge(context.Module, reference);
+                        Merge(context.Module, reference, GetReferencePath(reference, context.AssemblyPath));
                         processed = true;
                         break;
                 }
@@ -44,6 +44,27 @@ namespace Blobber
             return processed;
         }
 
+        /// <summary>
+        /// Gets the path to referenced assembly.
+        /// </summary>
+        /// <param name="assemblyReference">The assembly reference.</param>
+        /// <param name="targetAssemblyPath">The target assembly path.</param>
+        /// <returns></returns>
+        private string GetReferencePath(AssemblyReference assemblyReference, string targetAssemblyPath)
+        {
+            if (File.Exists(assemblyReference.Path))
+                return assemblyReference.Path;
+
+            var assemblyFileName = Path.GetFileName(assemblyReference.Path);
+            var targetPath = Path.GetDirectoryName(targetAssemblyPath);
+            return Path.Combine(targetPath, assemblyFileName);
+        }
+
+        /// <summary>
+        /// Embeds the loader.
+        /// </summary>
+        /// <param name="moduleDef">The module definition.</param>
+        /// <param name="taskAssemblyPath">The task assembly path.</param>
         private void EmbedLoader(ModuleDefMD2 moduleDef, string taskAssemblyPath)
         {
             var assemblyLoaderTypeName = typeof(Loader).FullName;

@@ -13,10 +13,10 @@ namespace Blobber
 
     partial class BlobberStitcher
     {
-        private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference)
+        private void Embed(ModuleDefMD2 targetModule,AssemblyReference assemblyReference, string assemblyReferencePath)
         {
             Logging.Write("Embedding {0}", assemblyReference.AssemblyName);
-            var gzippedAssembly = GetGZippedAssembly(assemblyReference);
+            var gzippedAssembly = GetGZippedAssembly(assemblyReferencePath);
             targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), gzippedAssembly));
             File.Delete(assemblyReference.Path);
         }
@@ -24,14 +24,14 @@ namespace Blobber
         /// <summary>
         /// Gets the Gzipped assembly.
         /// </summary>
-        /// <param name="assemblyReference">The assembly reference.</param>
+        /// <param name="assemblyReferencePath">The assembly reference path.</param>
         /// <returns></returns>
-        private static byte[] GetGZippedAssembly(AssemblyReference assemblyReference)
+        private static byte[] GetGZippedAssembly(string assemblyReferencePath)
         {
             using (var zippedStream = new MemoryStream())
             {
                 using (var gzipStream = new GZipStream(zippedStream, CompressionLevel.Optimal))
-                using (var assemblyStream = File.OpenRead(assemblyReference.Path))
+                using (var assemblyStream = File.OpenRead(assemblyReferencePath))
                     assemblyStream.CopyTo(gzipStream);
                 return zippedStream.ToArray();
             }

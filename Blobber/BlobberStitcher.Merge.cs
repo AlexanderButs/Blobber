@@ -15,11 +15,17 @@ namespace Blobber
 
     partial class BlobberStitcher
     {
-        private void Merge(ModuleDefMD2 targetModule, AssemblyReference assemblyReference)
+        /// <summary>
+        /// Merges the specified target module.
+        /// </summary>
+        /// <param name="targetModule">The target module.</param>
+        /// <param name="assemblyReference">The assembly reference.</param>
+        /// <param name="assemblyReferencePath">The assembly reference path.</param>
+        private void Merge(ModuleDefMD2 targetModule, AssemblyReference assemblyReference, string assemblyReferencePath)
         {
             Logging.Write("Merging   {0}", assemblyReference.AssemblyName);
 
-            var referenceModule = ModuleDefMD.Load(assemblyReference.Path);
+            var referenceModule = ModuleDefMD.Load(assemblyReferencePath);
             {
                 targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), new byte[0]));
 
