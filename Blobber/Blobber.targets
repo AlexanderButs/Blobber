@@ -7,6 +7,6 @@
 
   <UsingTask TaskName="BlobberTask" AssemblyFile="$(BlobberPath)" />
   <Target Name="BlobberTarget" AfterTargets="AfterBuild">
-    <BlobberTask ProjectPath="$(ProjectPath)" SolutionPath="$(SolutionPath)" AssemblyPath="@(IntermediateAssembly)" />
+    <BlobberTask ProjectPath="$(ProjectPath)" SolutionPath="$(SolutionPath)" AssemblyPath="$(TargetPath)" />
   </Target>
 </Project>
