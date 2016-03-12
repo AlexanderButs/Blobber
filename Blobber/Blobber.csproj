@@ -70,7 +70,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ProductInfo.tt</DependentUpon>
     </Compile>
-    <Compile Include="Relocators\IRelocator.cs" />
+    <Compile Include="Relocators\Relocator.cs" />
     <Compile Include="Relocators\ModuleRelocator.cs" />
     <Compile Include="Utility\dnlibExtensions.cs" />
   </ItemGroup>

@@ -8,18 +8,19 @@ namespace Blobber.Relocators
 {
     using dnlib.DotNet;
 
-    public class ModuleRelocator : IRelocator
+    internal class ModuleRelocator : Relocator
     {
         private readonly ModuleDefMD2 _oldModule;
         private readonly ModuleDefMD2 _newModule;
 
         public ModuleRelocator(ModuleDefMD2 oldModule, ModuleDefMD2 newModule)
+            : base(newModule)
         {
             _oldModule = oldModule;
             _newModule = newModule;
         }
 
-        public TypeDef Relocate(IType type)
+        protected override TypeDef RelocateType(IType type)
         {
             var scope = type?.Scope as IFullName;
             if (scope?.FullName != _oldModule.Assembly.FullName)

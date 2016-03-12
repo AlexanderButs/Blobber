@@ -73,9 +73,8 @@ namespace Blobber
                 // TODO: resources
                 // TODO: attributes?
 
-                // now, all references have to be replaced
-                foreach (var targetModuleType in targetModuleTypes)
-                    Relocate(targetModuleType, new ModuleRelocator(referenceModule, targetModule));
+                var relocator = new ModuleRelocator(referenceModule, targetModule);
+                relocator.Relocate();
             }
             //            File.Delete(assemblyReference.Path);
         }
