@@ -6,11 +6,10 @@
 
 namespace Blobber
 {
-    using System;
-    using System.IO;
     using System.Linq;
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
+    using Relocators;
     using StitcherBoy.Project;
 
     partial class BlobberStitcher
@@ -29,6 +28,7 @@ namespace Blobber
             {
                 targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), new byte[0]));
 
+                var targetModuleTypes = targetModule.GetTypes();
                 var allReferenceTypes = referenceModule.Types.ToArray();
                 referenceModule.Types.Clear();
                 foreach (var referenceType in allReferenceTypes)
@@ -72,8 +72,12 @@ namespace Blobber
 
                 // TODO: resources
                 // TODO: attributes?
+
+                // now, all references have to be replaced
+                foreach (var targetModuleType in targetModuleTypes)
+                    Relocate(targetModuleType, new ModuleRelocator(referenceModule, targetModule));
             }
-//            File.Delete(assemblyReference.Path);
+            //            File.Delete(assemblyReference.Path);
         }
     }
 }

@@ -10,6 +10,8 @@ namespace MergedLibrary
 
     public class MergedClass
     {
+        public class SubType { }
+
         public void G()
         {
             Console.WriteLine("Salut depuis MergedClass");
