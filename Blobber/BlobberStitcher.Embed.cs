@@ -15,13 +15,7 @@ namespace Blobber
     {
         private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference, string assemblyReferencePath)
         {
-            if (assemblyReference == null)
-                Logging.WriteError("Assembly reference not loaded");
-            if (assemblyReference.Assembly == null)
-                Logging.WriteError("Assembly not loaded");
-            if (assemblyReferencePath == null)
-                Logging.WriteError("Assembly reference path not found");
-            Logging.Write("Embedding {0} from {1}", (object)assemblyReference.AssemblyName ?? "(null)", assemblyReferencePath);
+            Logging.Write("Embedding {0} from {1}", (object)assemblyReference.AssemblyName, assemblyReferencePath);
             var gzippedAssembly = GetGZippedAssembly(assemblyReferencePath);
             targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), gzippedAssembly));
             File.Delete(assemblyReference.Path);

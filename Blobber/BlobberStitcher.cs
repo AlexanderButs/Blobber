@@ -26,6 +26,14 @@ namespace Blobber
             foreach (var reference in context.Project.References)
             {
                 var action = GetAction(reference, directives);
+                if (action != BlobAction.None)
+                {
+                    if (reference.Assembly == null)
+                    {
+                        Logging.WriteError("Can not load assembly {0}, exception {1}", reference.Name, reference.AssemblyLoadException);
+                        continue;
+                    }
+                }
                 switch (action)
                 {
                     case BlobAction.Embed:
