@@ -13,8 +13,12 @@ namespace Blobber
 
     partial class BlobberStitcher
     {
-        private void Embed(ModuleDefMD2 targetModule,AssemblyReference assemblyReference, string assemblyReferencePath)
+        private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference, string assemblyReferencePath)
         {
+            if (assemblyReference == null)
+                Logging.WriteError("Assembly reference not loaded");
+            if (assemblyReferencePath == null)
+                Logging.WriteError("Assembly reference path not found");
             Logging.Write("Embedding {0}", assemblyReference.AssemblyName);
             var gzippedAssembly = GetGZippedAssembly(assemblyReferencePath);
             targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.AssemblyName.ToString()), gzippedAssembly));

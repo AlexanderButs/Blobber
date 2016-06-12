@@ -50,7 +50,7 @@ namespace Blobber
         /// <param name="assemblyReference">The assembly reference.</param>
         /// <param name="targetAssemblyPath">The target assembly path.</param>
         /// <returns></returns>
-        private string GetReferencePath(AssemblyReference assemblyReference, string targetAssemblyPath)
+        private static string GetReferencePath(AssemblyReference assemblyReference, string targetAssemblyPath)
         {
             if (File.Exists(assemblyReference.Path))
                 return assemblyReference.Path;
@@ -81,8 +81,7 @@ namespace Blobber
             var loaderInitializeMethod = loaderType.FindMethod(nameof(Loader.Initialize));
             cctor.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, moduleDef.Import(loaderInitializeMethod)));
         }
-
-
+        
         /// <summary>
         /// Gets the action.
         /// </summary>
