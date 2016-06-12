@@ -237,3 +237,4 @@ _Pvt_Extensions
 
 *.nuspec
 ProductInfo.cs
+/Blobber.exe.debugTask
