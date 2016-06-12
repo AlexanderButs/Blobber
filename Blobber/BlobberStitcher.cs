@@ -10,6 +10,7 @@ namespace Blobber
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
     using Microsoft.Build.Evaluation;
@@ -25,7 +26,7 @@ namespace Blobber
             var directives = LoadDirectives(context);
             foreach (var reference in context.Project.References)
             {
-                var action = GetAction(reference, directives);
+                var action = GetAction(reference, directives, context.Configuration);
                 if (action != BlobAction.None)
                 {
                     if (reference.Assembly == null)
@@ -89,36 +90,40 @@ namespace Blobber
             var loaderInitializeMethod = loaderType.FindMethod(nameof(Loader.Initialize));
             cctor.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, moduleDef.Import(loaderInitializeMethod)));
         }
-        
+
         /// <summary>
         /// Gets the action.
         /// </summary>
         /// <param name="assemblyReference">The assembly reference.</param>
         /// <param name="directives">The directives.</param>
+        /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private static BlobAction GetAction(AssemblyReference assemblyReference, IList<BlobDirective> directives)
+        private static BlobAction GetAction(AssemblyReference assemblyReference, IList<BlobDirective> directives, string configuration)
         {
             var action = BlobAction.None;
             foreach (var directive in directives)
             {
-                var directiveAction = directive.Matches(assemblyReference);
+                var directiveAction = directive.Matches(assemblyReference, configuration);
                 if (directiveAction.HasValue)
                     action = directiveAction.Value;
             }
             return action;
         }
 
-        private IList<BlobDirective> LoadDirectives(StitcherContext context)
+        private static IList<BlobDirective> LoadDirectives(StitcherContext context)
         {
             var directivesFile = context.Project.Project.Items.SingleOrDefault(i => string.Equals(i.EvaluatedInclude, "Blobber", StringComparison.OrdinalIgnoreCase));
             var directives = LoadDirectives(Path.GetDirectoryName(context.ProjectPath), directivesFile);
             return directives;
         }
 
-        private IList<BlobDirective> LoadDirectives(string projectDirectory, ProjectItem item)
+        private static readonly Regex DirectiveEx = new Regex(@"^\s*(\((?<Configuration>([^#\)]+))\))?\s*(?<Scope>(\+|\-))?\s*(?<Assembly>[^\:]+)\s*\:\s*(?<Action>(Embed|Merge|None))\s*$",
+            RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+        private static IList<BlobDirective> LoadDirectives(string projectDirectory, ProjectItem item)
         {
             var directives = new List<BlobDirective>();
-            directives.Add(new BlobDirective(true, "*", BlobAction.Embed));
+            directives.Add(new BlobDirective("Release", true, "*", BlobAction.Embed));
             if (item != null)
             {
                 var itemPath = Path.Combine(projectDirectory, item.EvaluatedInclude);
@@ -129,44 +134,20 @@ namespace Blobber
                         var line = itemReader.ReadLine();
                         if (line == null)
                             break;
-                        if (line.StartsWith("#"))
+
+                        var match = DirectiveEx.Match(line);
+                        if (!match.Success)
                             continue;
 
-                        var parts = line.Split(new[] { ':' }, 2);
-                        if (parts.Length == 1)
-                            continue;
-
-                        bool isPrivate = true;
-                        var name = parts[0].Trim();
-                        if (name.StartsWith("+"))
-                        {
-                            isPrivate = false;
-                            name = name.Substring(1);
-                        }
-                        else if (name.StartsWith("-"))
-                        {
-                            isPrivate = false;
-                            name = name.Substring(1);
-                        }
-                        var action = Parse(parts[1].Trim());
-                        if (!action.HasValue)
-                        {
-                            Logging.WriteWarning("Error in Blobber line: {0}", line);
-                            continue;
-                        }
-                        directives.Add(new BlobDirective(isPrivate, name, action.Value));
+                        var configuration = match.Groups["Configuration"].Success ? match.Groups["Configuration"].Value : null;
+                        bool? isPrivate = match.Groups["Scope"].Success ? match.Groups["Scope"].Value == "+" : (bool?)null;
+                        var name = match.Groups["Assembly"].Value;
+                        var action = (BlobAction)Enum.Parse(typeof(BlobAction), match.Groups["Action"].Value, true);
+                        directives.Add(new BlobDirective(configuration, isPrivate ?? true, name, action));
                     }
                 }
             }
             return directives;
-        }
-
-        private static BlobAction? Parse(string literal)
-        {
-            BlobAction action;
-            if (Enum.TryParse(literal, true, out action))
-                return action;
-            return null;
         }
     }
 }

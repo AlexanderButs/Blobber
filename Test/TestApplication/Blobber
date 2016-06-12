@@ -9,3 +9,4 @@
 
 *: embed
 Merged*: merge
+(Release)+Release*: merge
