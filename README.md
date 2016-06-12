@@ -14,10 +14,11 @@ Also, assemblies referenced as not private ('copy local' not set) can be process
 
 In order to make fine tuning, simply add a file named `Blobber` at the projet root (it can be of any type, so the `none` is recommended).
 The syntax is:  
-`[<scope>]<name>:<action>`  
+`[(<Configuration>)][<scope>]<name>:<action>`  
 Where:  
+  - `<configuration>` is the build configuration. If this is specified, then the directive only applies in the given configuration.
   - `<scope>` can be `+`, `-` or left empty (in which case it is equivalent to `-`). `-` addresses private assemblies (the 'copy local') and `+` specifies public assemblies (I am honestly not sure this feature is useful)
-  - `<name>` is the name of the assembly to match. Wildcard are supported, so `SQLlite` or `Microsoft.*` will work as expected
+  - `<name>` is the name of the assembly to match. Wildcards are supported, so `SQLite` or `Microsoft.*` will work as expected
   - `<action>` is `none`, `merge` or `embed`.
 
 Note: all lines are always processed, so you need to start from less specific to most specific.
