@@ -31,7 +31,7 @@ namespace Blobber
                 {
                     if (reference.Assembly == null)
                     {
-                        Logging.WriteError("Can not load assembly {0}, exception {1}", reference.Name, reference.AssemblyLoadException);
+                        Logging.WriteError("Can not load assembly {0}, exception {1}", reference.Name.ToString(), reference.AssemblyLoadException);
                         continue;
                     }
                 }

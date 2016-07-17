@@ -22,7 +22,7 @@ namespace Blobber
         /// <param name="assemblyReferencePath">The assembly reference path.</param>
         private void Merge(ModuleDefMD2 targetModule, AssemblyReference assemblyReference, string assemblyReferencePath)
         {
-            Logging.Write("Merging   {0}", assemblyReference.Assembly.Name);
+            Logging.Write("Merging   {0}", assemblyReference.Assembly.Name.String);
 
             var referenceModule = ModuleDefMD.Load(assemblyReferencePath);
             {
