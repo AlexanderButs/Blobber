@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <UsingTask TaskName="BlobberTask" AssemblyFile="$(BlobberPath)" />
-  <Target Name="BlobberTarget" AfterTargets="AfterBuild">
+  <Target Name="BlobberTarget" AfterTargets="CopyFilesToOutputDirectory" BeforeTargets="PostBuildEvent">
     <BlobberTask ProjectPath="$(ProjectPath)" SolutionPath="$(SolutionPath)" AssemblyPath="$(TargetPath)" Configuration="$(Configuration)" />
   </Target>
 </Project>
