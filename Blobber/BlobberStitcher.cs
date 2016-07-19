@@ -45,6 +45,14 @@ namespace Blobber
                         Merge(context.Module, reference, GetReferencePath(reference, context.AssemblyPath));
                         processed = true;
                         break;
+                    case null:
+                        if (context.Configuration == "Debug")
+                            Logging.Write("Assembly {0} ({1}) excluded from process (no matching action at all)", reference.Name.ToString(), reference.IsPrivate ? "private" : "non-private");
+                        break;
+                    case BlobAction.None:
+                        if (context.Configuration == "Debug")
+                            Logging.Write("Assembly {0} ({1}) excluded from process", reference.Name.ToString(), reference.IsPrivate ? "private" : "non-private");
+                        break;
                 }
             }
 
@@ -98,9 +106,9 @@ namespace Blobber
         /// <param name="directives">The directives.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private static BlobAction GetAction(AssemblyReference assemblyReference, IList<BlobDirective> directives, string configuration)
+        private static BlobAction? GetAction(AssemblyReference assemblyReference, IList<BlobDirective> directives, string configuration)
         {
-            var action = BlobAction.None;
+            BlobAction? action = null;
             foreach (var directive in directives)
             {
                 var directiveAction = directive.Matches(assemblyReference, configuration);
