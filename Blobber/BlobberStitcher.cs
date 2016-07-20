@@ -31,7 +31,7 @@ namespace Blobber
                 {
                     if (reference.Assembly == null)
                     {
-                        Logging.WriteError("Can not load assembly {0}, exception {1}", reference.Name.ToString(), reference.AssemblyLoadException);
+                        Logging.WriteError("Can not load assembly {0}, exception {1}", GetReferenceName(reference), reference.AssemblyLoadException);
                         continue;
                     }
                 }
@@ -66,8 +66,8 @@ namespace Blobber
             if (reference == null)
                 return "(null)";
             if (reference.Name != null)
-                return $"{reference.Path} ({reference.Name})";
-            return reference.Path;
+                return reference.Name.ToString();
+            return Path.GetFileNameWithoutExtension(reference.Path);
         }
 
         /// <summary>
