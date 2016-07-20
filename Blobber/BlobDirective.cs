@@ -83,7 +83,7 @@ namespace Blobber
                 return null;
             if (Configuration != null && !string.Equals(Configuration, configuration))
                 return null;
-            var assemblyFileName = Path.GetFileName(assemblyReference.Path);
+            var assemblyFileName = Path.GetFileNameWithoutExtension(assemblyReference.Path);
             if (Name.WildcardMatch(assemblyFileName))
                 return Action;
             return null;

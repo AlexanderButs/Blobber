@@ -47,11 +47,11 @@ namespace Blobber
                         break;
                     case null:
                         if (context.Configuration == "Debug")
-                            Logging.Write("Assembly {0} ({1}) excluded from process (no matching action at all)", reference.Name.ToString(), reference.IsPrivate ? "private" : "non-private");
+                            Logging.Write("Assembly {0} ({1}) excluded from process (no matching action at all)", GetReferenceName(reference), reference.IsPrivate ? "private" : "non-private");
                         break;
                     case BlobAction.None:
                         if (context.Configuration == "Debug")
-                            Logging.Write("Assembly {0} ({1}) excluded from process", reference.Name.ToString(), reference.IsPrivate ? "private" : "non-private");
+                            Logging.Write("Assembly {0} ({1}) excluded from process", GetReferenceName(reference), reference.IsPrivate ? "private" : "non-private");
                         break;
                 }
             }
@@ -59,6 +59,15 @@ namespace Blobber
             if (processed)
                 EmbedLoader(context.Module, context.TaskAssemblyPath);
             return processed;
+        }
+
+        private static string GetReferenceName(AssemblyReference reference)
+        {
+            if (reference == null)
+                return "(null)";
+            if (reference.Name != null)
+                return $"{reference.Path} ({reference.Name})";
+            return reference.Path;
         }
 
         /// <summary>
