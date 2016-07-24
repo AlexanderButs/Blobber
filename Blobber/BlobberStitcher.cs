@@ -26,7 +26,8 @@ namespace Blobber
             var directives = LoadDirectives(context);
             foreach (var reference in context.Project.References)
             {
-                var action = GetAction(reference, directives, context.Configuration);
+                var assemblyFile = new AssemblyFile(reference, context.AssemblyPath);
+                var action = GetAction(assemblyFile, directives, context.Configuration);
                 if (action != BlobAction.None)
                 {
                     if (reference.Assembly == null)
@@ -38,11 +39,11 @@ namespace Blobber
                 switch (action)
                 {
                     case BlobAction.Embed:
-                        Embed(context.Module, reference, GetReferencePath(reference, context.AssemblyPath));
+                        Embed(context.Module, assemblyFile);
                         processed = true;
                         break;
                     case BlobAction.Merge:
-                        Merge(context.Module, reference, GetReferencePath(reference, context.AssemblyPath));
+                        Merge(context.Module, assemblyFile);
                         processed = true;
                         break;
                     case null:
@@ -68,22 +69,6 @@ namespace Blobber
             if (reference.Name != null)
                 return reference.Name.ToString();
             return Path.GetFileNameWithoutExtension(reference.Path);
-        }
-
-        /// <summary>
-        /// Gets the path to referenced assembly.
-        /// </summary>
-        /// <param name="assemblyReference">The assembly reference.</param>
-        /// <param name="targetAssemblyPath">The target assembly path.</param>
-        /// <returns></returns>
-        private static string GetReferencePath(AssemblyReference assemblyReference, string targetAssemblyPath)
-        {
-            if (File.Exists(assemblyReference.Path))
-                return assemblyReference.Path;
-
-            var assemblyFileName = Path.GetFileName(assemblyReference.Path);
-            var targetPath = Path.GetDirectoryName(targetAssemblyPath);
-            return Path.Combine(targetPath, assemblyFileName);
         }
 
         /// <summary>
@@ -115,12 +100,12 @@ namespace Blobber
         /// <param name="directives">The directives.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        private static BlobAction? GetAction(AssemblyReference assemblyReference, IList<BlobDirective> directives, string configuration)
+        private static BlobAction? GetAction(AssemblyFile assemblyReference, IList<BlobDirective> directives, string configuration)
         {
             BlobAction? action = null;
             foreach (var directive in directives)
             {
-                var directiveAction = directive.Matches(assemblyReference, configuration);
+                var directiveAction = directive.Matches(assemblyReference.Reference, configuration);
                 if (directiveAction.HasValue)
                     action = directiveAction.Value;
             }

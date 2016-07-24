@@ -13,12 +13,12 @@ namespace Blobber
 
     partial class BlobberStitcher
     {
-        private void Embed(ModuleDefMD2 targetModule, AssemblyReference assemblyReference, string assemblyReferencePath)
+        private void Embed(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
         {
-            Logging.Write("Embedding {0} from {1}", (object)assemblyReference.Assembly.Name.String, assemblyReferencePath);
-            var gzippedAssembly = GetGZippedAssembly(assemblyReferencePath);
-            targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyReference.Assembly.Name.ToString()), gzippedAssembly));
-            File.Delete(assemblyReference.Path);
+            Logging.Write("Embedding {0} from {1}", assemblyFile.Reference.Assembly.Name.String, assemblyFile.Path);
+            var gzippedAssembly = GetGZippedAssembly(assemblyFile.Path);
+            targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyFile.Reference.Assembly.Name.ToString()), gzippedAssembly));
+            assemblyFile.DeleteIfLocal();
         }
 
         /// <summary>
