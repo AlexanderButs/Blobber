@@ -38,12 +38,52 @@ namespace Blobber.Relocators
 
         private void Relocate(TypeDef typeDef)
         {
+            RelocateBase(typeDef);
             foreach (var methodDef in typeDef.Methods)
                 Relocate(methodDef);
             foreach (var propertyDef in typeDef.Properties)
                 Relocate(propertyDef);
             foreach (var fieldDef in typeDef.Fields)
                 Relocate(fieldDef);
+        }
+
+        private ITypeDefOrRef Relocate(ITypeDefOrRef typeDefOrRef)
+        {
+            if (typeDefOrRef == null)
+                return null;
+
+            var typeDef = typeDefOrRef as TypeDef;
+            if (typeDef != null)
+                return RelocateType(typeDef);
+
+            var typeRef = typeDefOrRef as TypeRef;
+            if (typeRef != null)
+                return RelocateType(typeRef);
+
+            var typeSpec = typeDefOrRef as TypeSpec;
+            if (typeSpec != null)
+                return Relocate(typeSpec.TypeSig).ToTypeDefOrRef();
+
+            throw new NotImplementedException();
+        }
+
+
+        private void RelocateBase(TypeDef typeDef)
+        {
+            var baseTypeDefOrRef = (ITypeDefOrRef)_targetModule.Import(typeDef.BaseType);
+            if (baseTypeDefOrRef != null)
+            {
+                var newBaseType = Relocate(typeDef.BaseType);
+                if (newBaseType != null)
+                    typeDef.BaseType = newBaseType;
+            }
+
+            foreach (var interfaceType in typeDef.Interfaces)
+            {
+                var newInterfaceType = RelocateType(interfaceType.Interface);
+                if (newInterfaceType != null)
+                    interfaceType.Interface = newInterfaceType;
+            }
         }
 
         private void Relocate(PropertyDef propertyDef)

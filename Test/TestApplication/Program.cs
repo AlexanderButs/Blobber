@@ -12,8 +12,14 @@ namespace TestApplication
     using EmbeddedLibrary;
     using MergedLibrary;
 
-    class Program
+    public class Program
     {
+        public class GenericToBeMerged : MergedGenericClass<int>
+        { }
+
+        public class ToBeMerged : MergedClass
+        { }
+
         static void D(MergedClass m)
         {
             m.G();
