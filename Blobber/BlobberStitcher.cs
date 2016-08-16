@@ -83,13 +83,13 @@ namespace Blobber
             var thisModuleDef = ModuleDefMD.Load(taskAssemblyPath);
             var loaderType = thisModuleDef.Find(assemblyLoaderTypeName, true);
             thisModuleDef.Types.Remove(loaderType);
-            loaderType.Name = "⌂";
+            loaderType.Name = "\u2302";
             loaderType.Namespace = null;
             moduleDef.Types.Add(loaderType);
             // ensure it is called from module cctor
             var moduleType = moduleDef.Find("<Module>", true);
             var cctor = moduleType.FindOrCreateStaticConstructor();
-            var loaderInitializeMethod = loaderType.FindMethod(nameof(Loader.Initialize));
+            var loaderInitializeMethod = loaderType.FindMethod(nameof(Loader.Setup));
             cctor.Body.Instructions.Insert(0, Instruction.Create(OpCodes.Call, moduleDef.Import(loaderInitializeMethod)));
         }
 

@@ -14,8 +14,13 @@ namespace Blobber
 
     public static class Loader
     {
-        internal static void Initialize()
+        private static bool _initialized;
+
+        internal static void Setup()
         {
+            if (_initialized)
+                return;
+            _initialized = true;
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
         }
 
