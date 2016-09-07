@@ -266,7 +266,7 @@ namespace Blobber.Relocators
 
         private ITypeDefOrRef RelocateOperand(ITypeDefOrRef operand)
         {
-            return operand;
+            return Relocate(operand);
         }
 
         private IField RelocateOperand(IField operand)

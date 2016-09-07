@@ -20,6 +20,12 @@ namespace TestApplication
         public class ToBeMerged : MergedClass
         { }
 
+        public class LocalGeneric<T>
+        { }
+
+        public class Local
+        { }
+
         static void D(MergedClass m)
         {
             m.G();
@@ -47,6 +53,18 @@ namespace TestApplication
             var dl = da.ToList();
             var c = new EmbeddedClass();
             c.F();
+        }
+
+        static void MergeGenericArgument()
+        {
+            var t = typeof(LocalGeneric<MergedClass>);
+            var z = new LocalGeneric<MergedClass>();
+        }
+
+        static void MergeGenericType()
+        {
+            var t = typeof(MergedGenericClass<Local>);
+            var z = new MergedGenericClass<Local>();
         }
 
         //private static void OnAssemblyLoad(object sender, AssemblyLoadEventArgs args)
