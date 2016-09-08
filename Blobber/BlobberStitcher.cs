@@ -21,45 +21,53 @@ namespace Blobber
     {
         protected override bool Process(StitcherContext context)
         {
-            Logging.Write("Assembly at {0}", context.AssemblyPath);
-            bool processed = false;
-            var directives = LoadDirectives(context);
-            foreach (var reference in context.Project.References)
+            try
             {
-                var assemblyFile = new AssemblyFile(reference, context.AssemblyPath);
-                var action = GetAction(assemblyFile, directives, context.Configuration);
-                if (action != BlobAction.None)
+                Logging.Write("Assembly at {0}", context.AssemblyPath);
+                bool processed = false;
+                var directives = LoadDirectives(context);
+                foreach (var reference in context.Project.References)
                 {
-                    if (reference.Assembly == null)
+                    var assemblyFile = new AssemblyFile(reference, context.AssemblyPath);
+                    var action = GetAction(assemblyFile, directives, context.Configuration);
+                    if (action != BlobAction.None)
                     {
-                        Logging.WriteError("Can not load assembly {0}, exception {1}", GetReferenceName(reference), reference.AssemblyLoadException);
-                        continue;
+                        if (reference.Assembly == null)
+                        {
+                            Logging.WriteError("Can not load assembly {0}, exception {1}", GetReferenceName(reference), reference.AssemblyLoadException);
+                            continue;
+                        }
+                    }
+                    switch (action)
+                    {
+                        case BlobAction.Embed:
+                            Embed(context.Module, assemblyFile);
+                            processed = true;
+                            break;
+                        case BlobAction.Merge:
+                            Merge(context.Module, assemblyFile);
+                            processed = true;
+                            break;
+                        case null:
+                            if (context.Configuration == "Debug")
+                                Logging.Write("Assembly {0} ({1}) excluded from process (no matching action at all)", GetReferenceName(reference),
+                                    reference.IsPrivate ? "private" : "non-private");
+                            break;
+                        case BlobAction.None:
+                            if (context.Configuration == "Debug")
+                                Logging.Write("Assembly {0} ({1}) excluded from process", GetReferenceName(reference), reference.IsPrivate ? "private" : "non-private");
+                            break;
                     }
                 }
-                switch (action)
-                {
-                    case BlobAction.Embed:
-                        Embed(context.Module, assemblyFile);
-                        processed = true;
-                        break;
-                    case BlobAction.Merge:
-                        Merge(context.Module, assemblyFile);
-                        processed = true;
-                        break;
-                    case null:
-                        if (context.Configuration == "Debug")
-                            Logging.Write("Assembly {0} ({1}) excluded from process (no matching action at all)", GetReferenceName(reference), reference.IsPrivate ? "private" : "non-private");
-                        break;
-                    case BlobAction.None:
-                        if (context.Configuration == "Debug")
-                            Logging.Write("Assembly {0} ({1}) excluded from process", GetReferenceName(reference), reference.IsPrivate ? "private" : "non-private");
-                        break;
-                }
-            }
 
-            if (processed)
-                EmbedLoader(context.Module, context.TaskAssemblyPath);
-            return processed;
+                if (processed)
+                    EmbedLoader(context.Module, context.TaskAssemblyPath);
+                return processed;
+            }
+            catch
+            {
+            }
+            return false;
         }
 
         private static string GetReferenceName(AssemblyReference reference)

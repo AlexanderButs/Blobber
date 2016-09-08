@@ -172,6 +172,10 @@ namespace Blobber.Relocators
             if (typeSig.IsGenericInstanceType)
                 return RelocateGeneric(typeSig);
 
+            // TODO
+            //if (typeSig.IsGenericParameter)
+            //
+
             return RelocateType(typeSig)?.ToTypeSig();
         }
 
@@ -266,7 +270,8 @@ namespace Blobber.Relocators
 
         private ITypeDefOrRef RelocateOperand(ITypeDefOrRef operand)
         {
-            return Relocate(operand);
+            var relocated = Relocate(operand);
+            return relocated ?? operand;
         }
 
         private IField RelocateOperand(IField operand)
