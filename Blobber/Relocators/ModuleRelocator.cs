@@ -19,14 +19,17 @@ namespace Blobber.Relocators
             _oldModule = oldModule;
             _newModule = newModule;
         }
-
-        protected override TypeDef RelocateType(IType type)
+        
+        protected override TypeSig TryRelocateTypeRef(TypeRef typeRef)
         {
-            var scope = type?.Scope as IFullName;
+            if (typeRef == null)
+                return null;
+            var scope = typeRef?.Scope as IFullName;
             if (scope?.FullName != _oldModule.Assembly.FullName)
                 return null;
-            var typeDef = _newModule.Find(type.FullName, false);
-            return typeDef;
+            var typeDef = _newModule.Find(typeRef.FullName, false);
+            return typeDef?.ToTypeSig();
+            //return new TypeRefUser(null, typeDef.Namespace, typeDef.Name, _newModule);
         }
     }
 }
