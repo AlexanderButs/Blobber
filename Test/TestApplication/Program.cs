@@ -15,13 +15,17 @@ namespace TestApplication
     public class Program
     {
         public class GenericToBeMerged : MergedGenericClass<int>
-        { }
+        {
+            public static void Nop() { }
+        }
 
         public class ToBeMerged : MergedClass
         { }
 
         public class LocalGeneric<T>
-        { }
+        {
+            public static void Nop() { }
+        }
 
         public class Local
         { }
@@ -65,6 +69,12 @@ namespace TestApplication
         {
             var t = typeof(MergedGenericClass<Local>);
             var z = new MergedGenericClass<Local>();
+        }
+
+        static void CallGenericType()
+        {
+            MergedGenericClass<Local>.Nop();
+            LocalGeneric<MergedClass>.Nop();
         }
 
         //private static void OnAssemblyLoad(object sender, AssemblyLoadEventArgs args)

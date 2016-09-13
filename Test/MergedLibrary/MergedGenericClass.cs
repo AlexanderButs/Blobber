@@ -6,5 +6,7 @@
 namespace MergedLibrary
 {
     public class MergedGenericClass<T>
-    { }
+    {
+        public static void Nop() { }
+    }
 }

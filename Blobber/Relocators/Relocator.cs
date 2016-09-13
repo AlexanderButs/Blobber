@@ -284,6 +284,13 @@ namespace Blobber.Relocators
 
         private MethodDef RelocateOperand(MethodDef operand)
         {
+            foreach (var parameter in operand.Parameters)
+            {
+                var parameterType = RelocateType(parameter.Type);
+                if (parameterType != null)
+                    parameter.Type = parameterType.ToTypeSig();
+            }
+
             return operand;
         }
 

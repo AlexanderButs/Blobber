@@ -15,5 +15,8 @@ public class BlobberTask : StitcherTask<BlobberStitcher>
     /// </summary>
     /// <param name="args">The arguments.</param>
     /// <returns></returns>
-    public static int Main(string[] args) => Run(new BlobberTask(), args);
+    public static int Main(string[] args)
+    {
+        return Run(new BlobberTask(), args);
+    }
 }
