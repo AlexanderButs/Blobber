@@ -55,8 +55,8 @@ namespace Blobber
 
         public void DeleteIfLocal()
         {
-            //if (IsLocal)
-            //    File.Delete(Path);
+            if (IsLocal)
+                File.Delete(Path);
         }
     }
 }
