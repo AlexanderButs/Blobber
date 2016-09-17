@@ -32,7 +32,13 @@ namespace Blobber
         private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            return GetEmbeddeddAssembly(assembly, args.Name) ?? GetMergedAssembly(assembly, args.Name);
+            var argsName = args.Name;
+            return Resolve(assembly, argsName);
+        }
+
+        public static Assembly Resolve(Assembly assembly, string assemblyName)
+        {
+            return GetEmbeddeddAssembly(assembly, assemblyName) ?? GetMergedAssembly(assembly, assemblyName);
         }
 
         /// <summary>
