@@ -14,14 +14,14 @@ namespace Blobber
 
     public static class Loader
     {
-        private static bool _initialized;
-
-        internal static void Setup()
+        public static void Setup()
         {
-            if (_initialized)
+            var currentDomain = AppDomain.CurrentDomain;
+            const string id = "Blobber:initialized";
+            if (currentDomain.GetData(id) != null)
                 return;
-            _initialized = true;
-            AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
+            currentDomain.SetData(id, new object());
+            currentDomain.AssemblyResolve += OnAssemblyResolve;
         }
 
         private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
