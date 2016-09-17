@@ -219,8 +219,11 @@ namespace Blobber.Relocators
             {
                 foreach (var variable in methodDef.Body.Variables)
                     Relocate(variable);
-                foreach (var instruction in methodDef.Body.Instructions)
+                for (int instructionIndex = 0; instructionIndex < methodDef.Body.Instructions.Count; instructionIndex++)
+                {
+                    var instruction = methodDef.Body.Instructions[instructionIndex];
                     Relocate(instruction);
+                }
             }
             foreach (var parameter in methodDef.Parameters)
                 Relocate(parameter);
@@ -256,17 +259,17 @@ namespace Blobber.Relocators
         {
             if (instruction.Operand == null)
                 return false;
-            bool replaced = RelocateType<Instruction>(ref instruction.Operand, RelocateOperand)
-                            || RelocateType<IList<Instruction>>(ref instruction.Operand, RelocateOperand)
+            // relocations are from most to least specific
+            bool replaced = RelocateType<IList<Instruction>>(ref instruction.Operand, RelocateOperand)
+                            || RelocateType<Instruction>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<MemberRef>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<ITypeDefOrRef>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<IField>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<MethodDef>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<MethodSpec>(ref instruction.Operand, RelocateOperand)
-                            || RelocateType<IMethod>(ref instruction.Operand, RelocateOperand)
-                            || RelocateType<ITokenOperand>(ref instruction.Operand, RelocateOperand)
                             || RelocateType<MethodSig>(ref instruction.Operand, RelocateOperand)
-                            || RelocateType<Parameter>(ref instruction.Operand, RelocateOperand);
+                            || RelocateType<Parameter>(ref instruction.Operand, RelocateOperand)
+                            ;
             return replaced;
         }
 
@@ -288,6 +291,21 @@ namespace Blobber.Relocators
             var newClass = TryRelocateTypeDefOrRef(operand.DeclaringType);
             if (newClass != null)
                 operand.Class = newClass;
+
+            if (operand.MethodSig != null)
+            {
+                var newMethodSig = RelocateOperand(operand.MethodSig);
+                if (newMethodSig != null)
+                    operand.MethodSig = newMethodSig;
+            }
+
+            if (operand.FieldSig != null)
+            {
+                var newFieldSig = TryRelocateTypeSig(operand.FieldSig.Type);
+                if (newFieldSig != null)
+                    operand.FieldSig.Type = newFieldSig;
+            }
+
             return operand;
         }
 
@@ -339,18 +357,19 @@ namespace Blobber.Relocators
             return operand;
         }
 
-        private IMethod RelocateOperand(IMethod operand)
-        {
-            return operand;
-        }
-
-        private ITokenOperand RelocateOperand(ITokenOperand operand)
-        {
-            return operand;
-        }
-
         private MethodSig RelocateOperand(MethodSig operand)
         {
+            var returnType = TryRelocateTypeSig(operand.RetType);
+            if (returnType != null)
+                operand.RetType = returnType;
+
+            for (int parameterIndex = 0; parameterIndex < operand.Params.Count; parameterIndex++)
+            {
+                var parameterType = TryRelocateTypeSig(operand.Params[parameterIndex]);
+                if (parameterType != null)
+                    operand.Params[parameterIndex] = parameterType;
+            }
+
             return operand;
         }
 
