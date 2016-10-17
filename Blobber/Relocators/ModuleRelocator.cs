@@ -19,7 +19,7 @@ namespace Blobber.Relocators
             _oldModule = oldModule;
             _newModule = newModule;
         }
-        
+
         protected override TypeSig TryRelocateTypeRef(TypeRef typeRef)
         {
             if (typeRef == null)

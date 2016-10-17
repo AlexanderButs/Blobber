@@ -8,7 +8,7 @@ namespace Blobber
 {
     using System.Diagnostics;
     using System.IO;
-    using StitcherBoy.Project;
+    using StitcherBoy.Weaving.Build;
     using WildcardMatch;
 
     [DebuggerDisplay("{Literal}")]
@@ -77,7 +77,7 @@ namespace Blobber
         /// <param name="assemblyReference">The assembly reference.</param>
         /// <param name="configuration">The configuration.</param>
         /// <returns></returns>
-        public BlobAction? Matches(AssemblyReference assemblyReference, string configuration)
+        public BlobAction? Matches(AssemblyDependency assemblyReference, string configuration)
         {
             if (assemblyReference.IsPrivate != Private)
                 return null;
@@ -89,10 +89,10 @@ namespace Blobber
             return null;
         }
 
-        private string GetAssemblyBaseName(AssemblyReference assemblyReference)
+        private static string GetAssemblyBaseName(AssemblyDependency assemblyReference)
         {
-            if (assemblyReference.Name != null)
-                return assemblyReference.Name.Name;
+            if (assemblyReference.Module != null)
+                return assemblyReference.Module.Name;
             return Path.GetFileNameWithoutExtension(assemblyReference.Path);
         }
     }

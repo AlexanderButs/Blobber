@@ -21,11 +21,11 @@ namespace Blobber
         /// <param name="assemblyFile">The assembly file.</param>
         private void Merge(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
         {
-            Logging.Write("Merging   {0}", assemblyFile.Reference.Assembly.Name.String);
+            Logging.Write("Merging   {0}", assemblyFile.Reference.Module.Name.String);
 
             var referenceModule = ModuleDefMD.Load(File.ReadAllBytes(assemblyFile.Path));
             {
-                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(assemblyFile.Reference.Assembly.Name.ToString()), new byte[0]));
+                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(assemblyFile.Reference.Module.Name.String), new byte[0]));
 
                 var allReferenceTypes = referenceModule.Types.ToArray();
                 referenceModule.Types.Clear();
@@ -49,7 +49,7 @@ namespace Blobber
                                 // otherwise the ref cctor is renamed, inserted as a simple method and called
                                 var targetModuleCctor = targetModuleModuleType.FindOrCreateStaticConstructor();
                                 // 1. renaming
-                                referenceCCtor.Name = referenceCCtor.Name + "/" + assemblyFile.Reference.Name;
+                                referenceCCtor.Name = referenceCCtor.Name + "/" + assemblyFile.Reference.Module.Name;
                                 referenceCCtor.Attributes &= ~MethodAttributes.SpecialName;
                                 // 2. adding
                                 targetModuleModuleType.Methods.Add(referenceCCtor);

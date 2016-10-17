@@ -22,6 +22,6 @@
   </metadata>
   <files>
     <file src="Blobber.targets" target="build\"/>
-    <file src="bin\$ConfigurationName$\Blobber.exe" target="."/>
+    <file src="bin\$ConfigurationName$\Blobber.exe" target="build\"/>
   </files>
 </package>

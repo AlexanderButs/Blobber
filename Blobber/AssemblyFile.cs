@@ -7,7 +7,7 @@
 namespace Blobber
 {
     using System.IO;
-    using StitcherBoy.Project;
+    using StitcherBoy.Weaving.Build;
 
     public class AssemblyFile
     {
@@ -17,7 +17,7 @@ namespace Blobber
         /// <value>
         /// The reference.
         /// </value>
-        public AssemblyReference Reference { get; }
+        public AssemblyDependency Reference { get; }
 
         /// <summary>
         /// Gets the path.
@@ -40,7 +40,7 @@ namespace Blobber
         /// </summary>
         /// <param name="reference">The reference.</param>
         /// <param name="targetModulePath">The target module path.</param>
-        public AssemblyFile(AssemblyReference reference, string targetModulePath)
+        public AssemblyFile(AssemblyDependency reference, string targetModulePath)
         {
             Reference = reference;
             var targetModuleDirectory = System.IO.Path.GetDirectoryName(targetModulePath);
