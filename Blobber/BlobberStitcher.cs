@@ -24,6 +24,12 @@ namespace Blobber
                 Logging.Write("Assembly at {0}", context.AssemblyPath);
                 bool processed = false;
                 var directives = LoadDirectives();
+                var disposables = new List<IDisposable>();
+                ModuleWritten += delegate
+                {
+                    foreach (var disposable in disposables)
+                        disposable.Dispose();
+                };
                 foreach (var reference in context.Dependencies)
                 {
                     var assemblyFile = new AssemblyFile(reference, context.AssemblyPath);
@@ -35,7 +41,7 @@ namespace Blobber
                             processed = true;
                             break;
                         case BlobAction.Merge:
-                            Merge(context.Module, assemblyFile);
+                            disposables.Add(Merge(context.Module, assemblyFile));
                             processed = true;
                             break;
                         case null:

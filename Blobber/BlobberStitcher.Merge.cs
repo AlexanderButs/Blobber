@@ -6,6 +6,7 @@
 
 namespace Blobber
 {
+    using System;
     using System.IO;
     using System.Linq;
     using dnlib.DotNet;
@@ -20,9 +21,9 @@ namespace Blobber
         /// </summary>
         /// <param name="targetModule">The target module.</param>
         /// <param name="assemblyFile">The assembly file.</param>
-        private void Merge(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
+        private IDisposable Merge(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
         {
-            using (var moduleManager = new ModuleManager(assemblyFile.Path, false, null))
+            var moduleManager = new ModuleManager(assemblyFile.Path, false, null);
             {
                 Logging.Write("Merging   {0}", moduleManager.Module.Name.String);
                 targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(moduleManager.Module.Name.String), new byte[0]));
@@ -75,6 +76,7 @@ namespace Blobber
                 relocator.Relocate();
             }
             assemblyFile.DeleteIfLocal();
+            return moduleManager;
         }
     }
 }
