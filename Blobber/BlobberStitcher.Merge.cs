@@ -25,8 +25,9 @@ namespace Blobber
         {
             var moduleManager = new ModuleManager(assemblyFile.Path, false, null);
             {
-                Logging.Write("Merging   {0}", moduleManager.Module.Name.String);
-                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(moduleManager.Module.Name.String), new byte[0]));
+                var baseName = GetBaseName(moduleManager.Module);
+                Logging.Write("Merging   {0}", baseName);
+                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(baseName), new byte[0]));
 
                 var allReferenceTypes = moduleManager.Module.Types.ToArray();
                 moduleManager.Module.Types.Clear();

@@ -17,9 +17,10 @@ namespace Blobber
         {
             using (var moduleManager = new ModuleManager(assemblyFile.Path, false, null))
             {
-                Logging.Write("Embedding {0} from {1}", moduleManager.Module.Name.String, assemblyFile.Path);
+                var baseName = GetBaseName(moduleManager.Module);
+                Logging.Write("Embedding {0} from {1}", baseName, assemblyFile.Path);
                 var gzippedAssembly = GetGZippedAssembly(assemblyFile.Path);
-                targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(moduleManager.Module.Name.String), gzippedAssembly));
+                targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(baseName), gzippedAssembly));
             }
             assemblyFile.DeleteIfLocal();
         }

@@ -62,7 +62,7 @@ namespace Blobber
             }
         }
 
-        internal static string GetEmbeddedAssemblyResourceName(string name) => "blobber:embedded.gz:" + name;
+        internal static string GetEmbeddedAssemblyResourceName(string name) => $"blobber:embedded.gz:{name}";
 
         private static Assembly GetMergedAssembly(Assembly assembly, string name)
         {
@@ -71,6 +71,6 @@ namespace Blobber
             return null;
         }
 
-        internal static string GetMergedAssemblyResourceName(string name) => "blobber:merged:" + name;
+        internal static string GetMergedAssemblyResourceName(string name) => $"blobber:merged:{name}";
     }
 }

@@ -10,6 +10,7 @@ namespace Blobber
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text.RegularExpressions;
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
@@ -64,6 +65,12 @@ namespace Blobber
             {
             }
             return false;
+        }
+
+        private static string GetBaseName(ModuleDef moduleDef)
+        {
+            // TODO: understand why the name here is not qualified, but a raw file name
+            return Path.GetFileNameWithoutExtension(moduleDef.Name);
         }
 
         private static string GetReferenceName(AssemblyDependency reference)
