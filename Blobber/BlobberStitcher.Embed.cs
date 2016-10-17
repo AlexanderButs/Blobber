@@ -9,14 +9,18 @@ namespace Blobber
     using System.IO;
     using System.IO.Compression;
     using dnlib.DotNet;
+    using StitcherBoy.Reflection;
 
     partial class BlobberStitcher
     {
         private void Embed(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
         {
-            Logging.Write("Embedding {0} from {1}", assemblyFile.Reference.Module.Name.String, assemblyFile.Path);
-            var gzippedAssembly = GetGZippedAssembly(assemblyFile.Path);
-            targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(assemblyFile.Reference.Module.Name.String), gzippedAssembly));
+            using (var moduleManager = new ModuleManager(assemblyFile.Path, false, null))
+            {
+                Logging.Write("Embedding {0} from {1}", moduleManager.Module.Name.String, assemblyFile.Path);
+                var gzippedAssembly = GetGZippedAssembly(assemblyFile.Path);
+                targetModule.Resources.Add(new EmbeddedResource(Loader.GetEmbeddedAssemblyResourceName(moduleManager.Module.Name.String), gzippedAssembly));
+            }
             assemblyFile.DeleteIfLocal();
         }
 

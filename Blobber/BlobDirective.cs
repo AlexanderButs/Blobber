@@ -91,8 +91,6 @@ namespace Blobber
 
         private static string GetAssemblyBaseName(AssemblyDependency assemblyReference)
         {
-            if (assemblyReference.Module != null)
-                return assemblyReference.Module.Name;
             return Path.GetFileNameWithoutExtension(assemblyReference.Path);
         }
     }

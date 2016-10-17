@@ -64,8 +64,6 @@ namespace Blobber
         {
             if (reference == null)
                 return "(null)";
-            if (reference.Module != null)
-                return reference.Module.Name.ToString();
             return Path.GetFileNameWithoutExtension(reference.Path);
         }
 

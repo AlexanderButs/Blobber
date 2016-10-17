@@ -11,6 +11,7 @@ namespace Blobber
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
     using Relocators;
+    using StitcherBoy.Reflection;
 
     partial class BlobberStitcher
     {
@@ -21,14 +22,13 @@ namespace Blobber
         /// <param name="assemblyFile">The assembly file.</param>
         private void Merge(ModuleDefMD2 targetModule, AssemblyFile assemblyFile)
         {
-            Logging.Write("Merging   {0}", assemblyFile.Reference.Module.Name.String);
-
-            var referenceModule = ModuleDefMD.Load(File.ReadAllBytes(assemblyFile.Path));
+            using (var moduleManager = new ModuleManager(assemblyFile.Path, false, null))
             {
-                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(assemblyFile.Reference.Module.Name.String), new byte[0]));
+                Logging.Write("Merging   {0}", moduleManager.Module.Name.String);
+                targetModule.Resources.Add(new EmbeddedResource(Loader.GetMergedAssemblyResourceName(moduleManager.Module.Name.String), new byte[0]));
 
-                var allReferenceTypes = referenceModule.Types.ToArray();
-                referenceModule.Types.Clear();
+                var allReferenceTypes = moduleManager.Module.Types.ToArray();
+                moduleManager.Module.Types.Clear();
                 foreach (var referenceType in allReferenceTypes)
                 {
                     // <Module> is handled differently
@@ -49,7 +49,7 @@ namespace Blobber
                                 // otherwise the ref cctor is renamed, inserted as a simple method and called
                                 var targetModuleCctor = targetModuleModuleType.FindOrCreateStaticConstructor();
                                 // 1. renaming
-                                referenceCCtor.Name = referenceCCtor.Name + "/" + assemblyFile.Reference.Module.Name;
+                                referenceCCtor.Name = referenceCCtor.Name + "/" + moduleManager.Module.Name;
                                 referenceCCtor.Attributes &= ~MethodAttributes.SpecialName;
                                 // 2. adding
                                 targetModuleModuleType.Methods.Add(referenceCCtor);
@@ -71,7 +71,7 @@ namespace Blobber
                 // TODO: resources
                 // TODO: attributes?
 
-                var relocator = new ModuleRelocator(referenceModule, targetModule);
+                var relocator = new ModuleRelocator(moduleManager.Module, targetModule);
                 relocator.Relocate();
             }
             assemblyFile.DeleteIfLocal();

@@ -240,3 +240,4 @@ ProductInfo.cs
 /Blobber.exe.debugTask
 /build
 /Blobber.exe
+*.debug
