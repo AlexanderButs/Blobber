@@ -10,8 +10,9 @@ namespace Blobber.Relocators
     using System.Collections.Generic;
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
+    using StitcherBoy.Reflection;
 
-    internal abstract class Relocator
+    internal abstract class Relocator: TypeRelocator
     {
         private readonly ModuleDefMD2 _targetModule;
 
@@ -19,13 +20,6 @@ namespace Blobber.Relocators
         {
             _targetModule = targetModule;
         }
-
-        /// <summary>
-        /// Relocates the type reference.
-        /// </summary>
-        /// <param name="typeRef">The type reference.</param>
-        /// <returns></returns>
-        protected abstract TypeSig TryRelocateTypeRef(TypeRef typeRef);
 
         /// <summary>
         /// Relocates the specified target module.
@@ -46,126 +40,6 @@ namespace Blobber.Relocators
             foreach (var fieldDef in typeDef.Fields)
                 Relocate(fieldDef);
         }
-
-        #region TryRelocate*
-
-        /// <summary>
-        /// Relocates the specified type.
-        /// </summary>
-        /// <param name="typeSig">The type sig.</param>
-        /// <returns></returns>
-        private TypeSig TryRelocateTypeSig(TypeSig typeSig)
-        {
-            if (typeSig == null)
-                return null;
-
-            if (typeSig is CorLibTypeSig)
-                return null;
-
-            if (typeSig is GenericInstSig)
-                return TryRelocateGeneric((GenericInstSig)typeSig);
-
-            if (typeSig is PtrSig)
-                return null;
-
-            if (typeSig is ByRefSig)
-                return TryRelocateByRef((ByRefSig)typeSig);
-
-            if (typeSig is ArraySig)
-                return TryRelocateArray((ArraySig)typeSig);
-
-            if (typeSig is SZArraySig)
-                return TryRelocateSZArray((SZArraySig)typeSig);
-
-            if (typeSig is GenericVar)
-                return null; // TODO constraints
-
-            if (typeSig is GenericMVar)
-                return null; // TODO constraints
-
-            if (typeSig is ValueTypeSig || typeSig is ClassSig)
-            {
-                var typeRef = typeSig.TryGetTypeRef();
-                if (typeRef != null)
-                    return TryRelocateTypeRef(typeRef);
-                var typeDefOrRef = TryRelocateTypeDefOrRef(typeSig.ToTypeDefOrRef());
-                return typeDefOrRef?.ToTypeSig();
-            }
-
-            throw new InvalidOperationException();
-        }
-
-        private TypeSig TryRelocateByRef(ByRefSig byRefSig)
-        {
-            var innerTypeSig = TryRelocateTypeSig(byRefSig.Next);
-            if (innerTypeSig == null)
-                return null;
-
-            return new ByRefSig(innerTypeSig);
-        }
-
-        private TypeSig TryRelocateGeneric(GenericInstSig genericInstSig)
-        {
-            bool relocated = false;
-            var genericTypeSig = TryRelocateTypeSig(genericInstSig.GenericType) as ClassOrValueTypeSig;
-            if (genericTypeSig != null)
-            {
-                genericInstSig.GenericType = genericTypeSig;
-                relocated = true;
-            }
-
-            for (int genericParameterIndex = 0; genericParameterIndex < genericInstSig.GenericArguments.Count; genericParameterIndex++)
-            {
-                var genericParameterType = TryRelocateTypeSig(genericInstSig.GenericArguments[genericParameterIndex]);
-                if (genericParameterType != null)
-                {
-                    genericInstSig.GenericArguments[genericParameterIndex] = genericParameterType;
-                    relocated = true;
-                }
-            }
-
-            return relocated ? genericInstSig : null;
-        }
-
-        private TypeSig TryRelocateArray(ArraySig arraySig)
-        {
-            var nextType = TryRelocateTypeSig(arraySig.Next);
-            if (nextType == null)
-                return null;
-            return new ArraySig(nextType);
-        }
-
-        private TypeSig TryRelocateSZArray(SZArraySig szArraySig)
-        {
-            var nextType = TryRelocateTypeSig(szArraySig.Next);
-            if (nextType == null)
-                return null;
-            return new SZArraySig(nextType);
-        }
-
-        private ITypeDefOrRef TryRelocateTypeDefOrRef(ITypeDefOrRef typeDefOrRef)
-        {
-            if (typeDefOrRef == null)
-                return null;
-
-            // no need to relocate
-            var typeDef = typeDefOrRef as TypeDef;
-            if (typeDef != null)
-                return null;
-
-            var typeRef = typeDefOrRef as TypeRef;
-            if (typeRef != null)
-                return TryRelocateTypeRef(typeRef).ToTypeDefOrRef();
-
-            var typeSpec = typeDefOrRef as TypeSpec;
-            if (typeSpec != null)
-                return TryRelocateTypeSig(typeSpec.TypeSig).ToTypeDefOrRef();
-
-            throw new NotImplementedException();
-        }
-
-        #endregion
-
 
         private void RelocateBase(TypeDef typeDef)
         {

@@ -63,9 +63,12 @@ namespace Blobber
                     else
                     {
                         // other case: simply move the type
+
+                        // check if there is a conflict, and if there is, change new type name
                         var existingType = targetModule.Find(referenceType.FullName, true);
                         if (existingType != null)
-                            targetModule.Types.Remove(existingType);
+                            referenceType.Name = GetMergedName(referenceType, moduleManager.Module);
+                        // and add the type
                         targetModule.Types.Add(referenceType);
                     }
                 }
@@ -78,6 +81,11 @@ namespace Blobber
             }
             assemblyFile.DeleteIfLocal();
             return moduleManager;
+        }
+
+        public static string GetMergedName(IType type, ModuleDef module)
+        {
+            return FullNameCreator.FullName(type, false, null, null) + $"@{module.Name}";
         }
     }
 }

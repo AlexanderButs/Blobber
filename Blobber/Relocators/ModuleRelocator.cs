@@ -24,12 +24,14 @@ namespace Blobber.Relocators
         {
             if (typeRef == null)
                 return null;
-            var scope = typeRef?.Scope as IFullName;
+            var scope = typeRef.Scope as IFullName;
             if (scope?.FullName != _oldModule.Assembly.FullName)
                 return null;
             var typeDef = _newModule.Find(typeRef.FullName, false);
+            // this seems to be useless: TODO: check and remove
+            if (typeDef == null)
+                typeDef = _newModule.Find(BlobberStitcher.GetMergedName(typeRef, _oldModule), false);
             return typeDef?.ToTypeSig();
-            //return new TypeRefUser(null, typeDef.Namespace, typeDef.Name, _newModule);
         }
     }
 }
