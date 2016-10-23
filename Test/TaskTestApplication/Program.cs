@@ -6,7 +6,9 @@
 
 namespace TaskTestApplication
 {
+    using System;
     using EmbeddedLibrary;
+    using EmbeddedPortableLibrary;
     using MergedLibrary;
 
     class Program
@@ -17,6 +19,9 @@ namespace TaskTestApplication
             c.F();
             var d = new MergedClass();
             d.G();
+            var e = new EmbeddedPortableClass();
+            Console.WriteLine(e.H());
+            Console.ReadLine();
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Blobber
         private static Assembly OnAssemblyResolve(object sender, ResolveEventArgs args)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var argsName = args.Name;
+            var argsName = new AssemblyName(args.Name).ToString();
             return Resolve(assembly, argsName);
         }
 
@@ -62,7 +62,7 @@ namespace Blobber
             }
         }
 
-        internal static string GetEmbeddedAssemblyResourceName(string name) => $"blobber:embedded.gz:{name}";
+        internal static string GetEmbeddedAssemblyResourceName(string name) => $"\u2302.gz:{name}";
 
         private static Assembly GetMergedAssembly(Assembly assembly, string name)
         {
@@ -71,6 +71,6 @@ namespace Blobber
             return null;
         }
 
-        internal static string GetMergedAssemblyResourceName(string name) => $"blobber:merged:{name}";
+        internal static string GetMergedAssemblyResourceName(string name) => $"\u2302:{name}";
     }
 }

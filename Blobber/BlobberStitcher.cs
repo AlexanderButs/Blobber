@@ -69,8 +69,7 @@ namespace Blobber
 
         private static string GetBaseName(ModuleDef moduleDef)
         {
-            // TODO: understand why the name here is not qualified, but a raw file name
-            return Path.GetFileNameWithoutExtension(moduleDef.Name);
+            return new AssemblyName(moduleDef.Assembly.FullName).ToString();
         }
 
         private static string GetReferenceName(AssemblyDependency reference)

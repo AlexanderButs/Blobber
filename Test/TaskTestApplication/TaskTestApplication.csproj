@@ -49,6 +49,10 @@
       <Project>{0E8540A5-21E6-462F-AD56-2D6AD60BE673}</Project>
       <Name>EmbeddedLibrary</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EmbeddedPortableLibrary\EmbeddedPortableLibrary.csproj">
+      <Project>{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A}</Project>
+      <Name>EmbeddedPortableLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MergedLibrary\MergedLibrary.csproj">
       <Project>{83045FF0-09C4-44A7-BEAA-84CB21A6CBFD}</Project>
       <Name>MergedLibrary</Name>
@@ -67,5 +71,11 @@
     <PreBuildEvent>if not exist "$(SolutionDir)Blobber.exe" copy "$(SolutionDir)Blobber\bin\$(ConfigurationName)\Blobber.exe" "$(SolutionDir)Blobber.exe"
 copy "$(SolutionDir)Blobber\bin\$(ConfigurationName)\Blobber.exe" "$(SolutionDir)Blobber.exe.debugTask"
 </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if not exist "..\Test" mkdir "..\Test"
+
+copy $(TargetPath) ..\Test
+</PostBuildEvent>
   </PropertyGroup>
 </Project>
