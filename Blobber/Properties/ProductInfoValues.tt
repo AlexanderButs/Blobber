@@ -1,6 +1,6 @@
 ﻿<#
     // all common data between assembly information and nuspec package are stored here
-    var Version = "0.7.2";
+    var Version = "0.7.3";
     var Title = "Blobber";
     var Company = "openstore.craponne.fr";
     var License = "MIT License";
