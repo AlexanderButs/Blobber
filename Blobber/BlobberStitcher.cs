@@ -9,7 +9,6 @@ namespace Blobber
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
     using dnlib.DotNet;
@@ -61,8 +60,9 @@ namespace Blobber
                     EmbedLoader(context.Module, context.TaskAssemblyPath);
                 return processed;
             }
-            catch
+            catch (Exception e)
             {
+                Logging.WriteError("Error while blobbing: {0}", e);
             }
             return false;
         }
