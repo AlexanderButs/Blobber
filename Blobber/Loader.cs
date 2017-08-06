@@ -10,6 +10,7 @@ namespace Blobber
     using System.Diagnostics;
     using System.IO;
     using System.IO.Compression;
+    using System.Linq;
     using System.Reflection;
 
     public static class Loader
@@ -33,11 +34,29 @@ namespace Blobber
         {
             var assembly = Assembly.GetExecutingAssembly();
             var argsName = new AssemblyName(args.Name).ToString();
-            return Resolve(assembly, argsName);
+            return Resolve(assembly, argsName) ?? Resolve(args.RequestingAssembly, argsName) ?? ResolveAll(args.Name);
         }
 
+        /// <summary>
+        /// Resolves assembly in all assemblies from current domain.
+        /// </summary>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns></returns>
+        private static Assembly ResolveAll(string assemblyName)
+        {
+            return AppDomain.CurrentDomain.GetAssemblies().Select(a => Resolve(a, assemblyName)).FirstOrDefault(a => a != null);
+        }
+
+        /// <summary>
+        /// Tries to resolve an assembly given its name, by looking in the current assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="assemblyName">Name of the assembly.</param>
+        /// <returns></returns>
         public static Assembly Resolve(Assembly assembly, string assemblyName)
         {
+            if (assembly == null)
+                return null;
             return GetEmbeddeddAssembly(assembly, assemblyName) ?? GetMergedAssembly(assembly, assemblyName);
         }
 
