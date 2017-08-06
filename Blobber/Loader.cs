@@ -24,7 +24,7 @@ namespace Blobber
             currentDomain.AssemblyResolve += OnAssemblyResolve;
         }
 
-        public static void Register()
+        public static void SetupResolver()
         {
             AppDomain.CurrentDomain.AssemblyResolve += OnAssemblyResolve;
         }
