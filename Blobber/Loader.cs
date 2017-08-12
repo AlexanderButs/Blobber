@@ -34,7 +34,7 @@ namespace Blobber
         {
             var assembly = Assembly.GetExecutingAssembly();
             var argsName = new AssemblyName(args.Name).ToString();
-            return Resolve(assembly, argsName) ?? Resolve(args.RequestingAssembly, argsName) ?? ResolveAll(args.Name);
+            return Resolve(assembly, argsName) ?? Resolve(args.RequestingAssembly, argsName);// ?? ResolveAll(args.Name);
         }
 
         /// <summary>
