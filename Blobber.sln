@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blobber", "Blobber\Blobber.csproj", "{313D4F23-D79A-48BC-8580-67FB5E114DEB}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -65,7 +65,6 @@ Global
 		{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,5 +76,8 @@ Global
 		{A6BEE310-57C9-4BC3-8781-7F4517716744} = {A5B86DDA-049F-412D-BC15-3924DEFEC60C}
 		{CE7A47B6-9AC8-465D-8274-DF0488762BC5} = {0BD9E146-23EC-4887-B06A-FECF831F9A5C}
 		{90E9F0E6-D536-4E68-9C24-49BDB9F04F4A} = {0BD9E146-23EC-4887-B06A-FECF831F9A5C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A0A1594C-308E-470E-ABCA-D1B6B34D2054}
 	EndGlobalSection
 EndGlobal
