@@ -7,7 +7,6 @@
 namespace Blobber
 {
     using System;
-    using System.IO;
     using System.Linq;
     using dnlib.DotNet;
     using dnlib.DotNet.Emit;
@@ -85,7 +84,7 @@ namespace Blobber
 
         public static string GetMergedName(IType type, ModuleDef module)
         {
-            return FullNameCreator.FullName(type, false, null, null) + $"@{module.Name}";
+            return FullNameFactory.FullName(type, false, null, null) + $"@{module.Name}";
         }
     }
 }

@@ -84,14 +84,19 @@ namespace Blobber
         /// </summary>
         /// <param name="moduleDef">The module definition.</param>
         /// <param name="taskAssemblyPath">The task assembly path.</param>
-        private void EmbedLoader(ModuleDefMD2 moduleDef, string taskAssemblyPath)
+        private void EmbedLoader(ModuleDef moduleDef, string taskAssemblyPath)
         {
+            const string loaderTypeName = "\u2302";
+            // blobbing twice? Don't.
+            if (moduleDef.TypeExistsNormal(loaderTypeName))
+                return;
+
             var assemblyLoaderTypeName = typeof(Loader).FullName;
             // import Loader type from this assembly
             var thisModuleDef = ModuleDefMD.Load(taskAssemblyPath);
             var loaderType = thisModuleDef.Find(assemblyLoaderTypeName, true);
             thisModuleDef.Types.Remove(loaderType);
-            loaderType.Name = "\u2302";
+            loaderType.Name = loaderTypeName;
             loaderType.Namespace = null;
             moduleDef.Types.Add(loaderType);
             // ensure it is called from module cctor
@@ -129,7 +134,7 @@ namespace Blobber
             directives.Add(new BlobDirective("Release", true, "*", BlobAction.Embed));
             using (var itemReader = File.OpenText("Blobber"))
             {
-                for (;;)
+                for (; ; )
                 {
                     var line = itemReader.ReadLine();
                     if (line == null)
