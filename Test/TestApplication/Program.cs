@@ -16,7 +16,7 @@ namespace TestApplication
     {
         public class GenericToBeMerged : MergedGenericClass<int>
         {
-            public static void Nop() { }
+            public new static void Nop() { }
         }
 
         public class ToBeMerged : MergedClass

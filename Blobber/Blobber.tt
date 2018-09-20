@@ -9,6 +9,7 @@
     <title><#=Title#></title>
     <authors><#=Company#></authors>
     <owners><#=Company#></owners>
+    <!-- <#=License#> -->
     <licenseUrl><#=LicenseUrl#></licenseUrl>
     <projectUrl>https://github.com/picrap/Blobber</projectUrl>
     <iconUrl>https://raw.githubusercontent.com/picrap/Blobber/master/Icon/Blobber.png</iconUrl>
