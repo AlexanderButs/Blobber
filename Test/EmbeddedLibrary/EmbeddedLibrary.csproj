@@ -30,8 +30,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="StitcherBoy, Version=1.1.2.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\StitcherBoy.1.1.2\lib\net45\StitcherBoy.dll</HintPath>
+    <Reference Include="StitcherBoy, Version=1.1.3.0, Culture=neutral, PublicKeyToken=a3be45b63ddcbf4d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\StitcherBoy.1.1.3\lib\net45\StitcherBoy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
