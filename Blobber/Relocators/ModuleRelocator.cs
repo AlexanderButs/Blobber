@@ -20,7 +20,7 @@ namespace Blobber.Relocators
             _newModule = newModule;
         }
 
-        protected override TypeSig TryRelocateTypeRef(TypeRef typeRef)
+        protected override ITypeDefOrRef TryRelocateTypeRef(TypeRef typeRef)
         {
             if (typeRef == null)
                 return null;
@@ -31,7 +31,21 @@ namespace Blobber.Relocators
             // this seems to be useless: TODO: check and remove
             if (typeDef == null)
                 typeDef = _newModule.Find(BlobberStitcher.GetMergedName(typeRef, _oldModule), false);
-            return typeDef?.ToTypeSig();
+            return typeDef;
+        }
+
+        protected override ITypeDefOrRef TryRelocateTypeDef(TypeDef typeDef)
+        {
+            if (typeDef == null)
+                return null;
+            var scope = typeDef.Scope as IFullName;
+            if (scope?.FullName != _oldModule.Assembly.FullName)
+                return null;
+            var relocatedTypeDef = _newModule.Find(typeDef.FullName, false);
+            // this seems to be useless: TODO: check and remove
+            if (relocatedTypeDef == null)
+                relocatedTypeDef = _newModule.Find(BlobberStitcher.GetMergedName(typeDef, _oldModule), false);
+            return relocatedTypeDef;
         }
     }
 }
