@@ -235,7 +235,6 @@ _Pvt_Extensions
 # FAKE - F# Make
 .fake/
 
-*.nuspec
 ProductInfo.cs
 /Blobber.exe.debugTask
 /build

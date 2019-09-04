@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <PropertyGroup>
-    <BlobberPath Condition="$(BlobberPath) == '' Or $(BlobberPath) == '*Undefined*'">$(MSBuildThisFileDirectory)..\build\Blobber.exe</BlobberPath>
+    <BlobberPath Condition="$(BlobberPath) == '' Or $(BlobberPath) == '*Undefined*'">$(MSBuildThisFileDirectory)..\build\Blobber.dll</BlobberPath>
   </PropertyGroup>
 
   <UsingTask TaskName="BlobberTask" AssemblyFile="$(BlobberPath)" />

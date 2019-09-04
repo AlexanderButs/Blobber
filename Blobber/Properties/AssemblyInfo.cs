@@ -7,7 +7,5 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Blobber")]
-
 [assembly: ComVisible(false)]
 

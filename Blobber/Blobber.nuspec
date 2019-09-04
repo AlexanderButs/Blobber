@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Blobber</id>
+    <version>0.9.0</version>
+    <title>$title$</title>
+    <authors>openstore.craponne.fr</authors>
+    <owners>openstore.craponne.fr</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/picrap/Blobber</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/picrap/Blobber/master/Icon/Blobber.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Embeds or merges referenced assemblies</summary>
+    <description>Classes for post-build tasks, to modify assemblies after generation (using dnlib). Allows to run from command-line or build task.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2016</copyright>
+    <tags></tags>
+    <developmentDependency>false</developmentDependency>
+  </metadata>
+  <files>
+    <file src="Blobber.targets" target="build"/>
+    <file src="bin\Release\netstandard2.0\Blobber.dll" target="build"/>
+  </files>
+</package>
